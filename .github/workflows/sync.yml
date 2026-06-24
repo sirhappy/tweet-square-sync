@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # >>> DOI dong duoi thanh @username X cua ban (bo dau @) <<<
-      TWITTER_USERNAME: "yourusername"
+      TWITTER_USERNAME: "OnchainDataNerd"
     steps:
       - uses: actions/checkout@v4
 
