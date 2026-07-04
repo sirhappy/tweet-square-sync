@@ -19,6 +19,7 @@ Luong dang anh lay tu ma nguon CHINH THUC cua Binance (binance-skills-hub):
 BAO MAT: tat ca key doc tu BIEN MOI TRUONG (GitHub Secrets). KHONG hardcode.
 """
 import os
+import re
 import sys
 import time
 import requests
@@ -41,6 +42,11 @@ MAX_POLL = 10
 
 CT_MAP = {"jpg": "image/jpeg", "jpeg": "image/jpeg", "png": "image/png",
           "gif": "image/gif", "webp": "image/webp"}
+
+# X API tu gan link rut gon t.co o CUOI text cua tweet co anh/video (link tro ve
+# anh/tweet goc tren Twitter) -> bo di cho khoi thua khi dang len Square.
+# Chi bo link dinh o cuoi; link ban co tinh dan o giua cau van duoc giu.
+TRAILING_TCO_RE = re.compile(r"\s*(?:https?://t\.co/\w+\s*)+$")
 
 # Ma loi hay gap cua Square -> giai thich de hieu
 SQ_ERR = {
@@ -124,6 +130,11 @@ def get_new_tweets(uid, since):
     return list(reversed(out))  # cu -> moi
 
 
+def strip_trailing_tco(text):
+    """Bo cac link t.co dinh o CUOI text (link anh/tweet goc do X tu gan)."""
+    return TRAILING_TCO_RE.sub("", text).strip()
+
+
 # ---------- Binance Square ----------
 def sq_api(base, endpoint, body, timeout=60):
     r = requests.post(f"{base}{endpoint}", headers=SQ_HEADERS, json=body, timeout=timeout)
@@ -200,7 +211,7 @@ def main():
         return
 
     for tw in tweets:
-        text = tw.get("text", "").strip()
+        text = strip_trailing_tco(tw.get("text", ""))
         photos = tw.get("_photos", [])
         if photos:
             note = f" (+{len(photos)} anh)"
