@@ -8,7 +8,7 @@ on:
   schedule:
     # ~moi 15 phut. Tranh dau gio (phut :00) cho do bi tre.
     # Luu y: GitHub chay theo gio UTC va co the tre 10-30 phut luc cao diem.
-    - cron: '5,20,35,50 * * * *'
+    - cron: '0,30 0-16 * * *'
   workflow_dispatch:   # cho phep bam "Run workflow" de chay tay / test
 
 permissions:
